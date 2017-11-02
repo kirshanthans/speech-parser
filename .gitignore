@@ -1,1 +1,7 @@
 *.class
+AST*.java
+J*.java
+P*.java
+SimpleNode.java
+T*.java
+grammar.jj
