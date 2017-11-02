@@ -1,6 +1,6 @@
 # Instructions
-``jjtree grammar.jjt``
-``javacc grammar.jj``
-``./annotateAST.pl``
-``javac Driver.java``
-``java Driver input.txt``
+1. ``jjtree grammar.jjt``
+2. ``javacc grammar.jj``
+3. ``./annotateAST.pl``
+4. ``javac Driver.java``
+5. ``java Driver input.txt``

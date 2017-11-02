@@ -2,6 +2,7 @@
 AST*.java
 J*.java
 P*.java
+Node.java
 SimpleNode.java
 T*.java
 grammar.jj
