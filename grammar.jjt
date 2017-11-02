@@ -1,0 +1,141 @@
+options {
+  JAVA_UNICODE_ESCAPE = true;
+  NODE_PREFIX = "AST";
+  MULTI = true;
+  STATIC = false;
+  NODE_DEFAULT_VOID = true;
+}
+
+PARSER_BEGIN(Parser)                    //The parser class name is "Parser"
+import java.io.*;
+public class Parser {}
+PARSER_END(Parser)
+
+
+/////////////////////  Lexical Analyzer Rules  ////////////////////////
+
+
+SKIP : {
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+TOKEN : 
+{
+  < NUMBER: (<DIGIT>)+ ( "." (<DIGIT>)+ )? >
+|
+  < #DIGIT: [ "0"-"9" ] >
+}
+
+TOKEN : { < DETERMINER: "the" | "every" | "this" | "a" | "an" > }
+
+TOKEN: { < NOUN: "time" | "arrow" | "flies" | "widget" | "cat" > } 
+
+TOKEN: { < PRONOUN: "i" | "we" | "this" | "you" | "us" > }
+
+TOKEN: { < VERB: "is" | "are" | "have" | "has" | "make" | "time" 
+                      | "flies" | "build" | "stores" | "buying" | "like" > }
+
+TOKEN: { < ADJ: "time" | "big" | "high quality" | "fast" | "large"
+                        | "precise" | "high" > }
+
+TOKEN: { < PREPOSITION: "with" | "without" | "for" | "about" | "at" 
+                               | "between" | "but" | "below" 
+                               | "in" | "into" | "like" | "except" 
+                               | "following" | "on" | "than" | "over" 
+                               | "near" | "of" | "like" | "since" | "up" 
+			       | "upon" | "within" | "by" > }
+
+TOKEN : /* words */
+{
+  < WORD: (<LETTER>)+ >
+|
+  < #LETTER: ["a"-"z", "A"-"Z"] >
+}
+
+/* SEPARATORS */
+TOKEN :
+{
+      < PERIOD: "." >
+}
+
+
+//////////////////////////   Grammar Rules  /////////////////////////////
+
+ASTSpeech Speech() #Speech :
+{}
+{
+    ( Sentence() <PERIOD> )+
+    { return jjtThis; }
+}
+
+void Sentence() #Sentence : 
+{ }
+{
+    ( NP() )?  VP()
+}
+
+void NP() #NounPhrase :
+{}
+{
+    ( Pronoun() | ( ( Determiner() )? ( Adjective() )* CN() ) ) (PP())?
+}
+
+void CN() #CompoundNoun:
+{}
+{
+    Noun() ( Noun() )?
+}
+
+void PP() #PrepPhrase :
+{}
+{
+    Preposition() NP()
+}
+
+void VP() #VerbPhrase :
+{}
+{
+    Verb() NP()
+}
+
+///////////////////////// Grammar Leaf Nodes  //////////////////////////
+
+void Noun() #Noun :
+{Token t;}
+{
+    t=<NOUN> {jjtThis.setLexem(t.image);}
+}
+
+void Pronoun() #Pronoun :
+{Token t;}
+{
+    t=<PRONOUN> {jjtThis.setLexem(t.image);}
+}
+
+void Determiner() #Determiner :
+{Token t;}
+{
+    t=<DETERMINER> {jjtThis.setLexem(t.image);}
+}
+
+void Adjective() #Adjective :
+{Token t;}
+{
+    t=<ADJ> {jjtThis.setLexem(t.image);}
+}
+
+void Preposition() #Preposition :
+{Token t;}
+{
+    t=<PREPOSITION> {jjtThis.setLexem(t.image);}
+}
+
+void Verb() #Verb :
+{Token t;}
+{
+    t=<VERB> {jjtThis.setLexem(t.image);}
+}
